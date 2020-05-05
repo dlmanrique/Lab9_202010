@@ -27,8 +27,7 @@ def newEdge (va, vb, weight=0):
 
 def weight (edge):
     return edge['weight']
-
-
+    
 def either (edge):
     return edge['vertexA']
 

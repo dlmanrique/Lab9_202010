@@ -2,14 +2,12 @@ import config
 from DataStructures import edge as e
 from DataStructures import listiterator as it
 from ADT import indexminpq as minpq
+from ADT import list as lt 
 from ADT import map as map
 from ADT import graph as g
 from ADT import stack as stk
 import math
 
-
-def comparenames (searchname, element):
-    return (searchname == element['key'])
 
 def newDijkstra(graph, s):
     """
@@ -29,13 +27,17 @@ def newDijkstra(graph, s):
     minpq.insert(search['minpq'], s, 0)
     while not minpq.isEmpty(search['minpq']):
         v = minpq.delMin(pq)
+        w = g.adjacentEdges(search['graph'],v)
+        iterator_adjacents = it.newIterator(w)
+        while (it.hasNext(iterator_adjacents)):
+            vertice = it.next (iterator_adjacents)
+            relax(search,vertice)
         if not g.containsVertex(graph,v):
             raise Exception("Vertex ["+v+"] is not in the graph")
         # obtener los enlaces adjacentes de v
         # Iterar sobre la lista de enlaces
         # Relajar (relax) cada enlace
     return search
-
 
 def relax(search, edge):
     v = e.either(edge)
@@ -105,4 +107,45 @@ def nextPrime(N):
         if(isPrime(prime) == True): 
             found = True
     return prime 
+def comparenames (searchname, element):
+    return (searchname == element['key'])
+
+if __name__ ==  "__main__" :
+    graph = g.newGraph(7,comparenames,True)
+
+    g.insertVertex (graph, 'Bogota')
+    g.insertVertex (graph, 'Yopal')
+    g.insertVertex (graph, 'Cali')
+    g.insertVertex (graph, 'Medellin')
+    g.insertVertex (graph, 'Pasto')
+    g.insertVertex (graph, 'Barranquilla')
+    g.insertVertex (graph, 'Manizales')
+    
+    g.insertVertex (graph, 'Cucuta')
+    g.insertVertex (graph, 'Bucaramanga')
+
+
+    g.addEdge (graph, 'Bogota', 'Yopal', 1.0 )
+    g.addEdge (graph, 'Bogota', 'Medellin', 1.0 )
+    g.addEdge (graph, 'Bogota', 'Pasto', 1.0 )
+    g.addEdge (graph, 'Bogota', 'Cali', 1.0 )
+    g.addEdge (graph, 'Yopal', 'Medellin', 1.0 )
+    g.addEdge (graph, 'Medellin', 'Pasto', 1.0 )
+    g.addEdge (graph, 'Cali', 'Pasto', 1.0 )
+    g.addEdge (graph, 'Cali', 'Barranquilla', 1.0 )
+    g.addEdge (graph, 'Barranquilla','Manizales', 1.0 )
+    g.addEdge (graph, 'Pasto','Manizales', 1.0 )
+    g.addEdge (graph, 'Cucuta','Bucaramanga', 1.0 )
+
+    search = newDijkstra(graph,'Bogota')
+    #print ('A Cali', hasPathTo(search, 'Cali'))
+    print ('A Cucuta', distTo(search,'Cucuta'))
+    print('A Cali', distTo(search,'Cali'))
+    #pathManizales= pathTo(search,'Manizales')
+    #print('DSF::roadToManizales',pathManizales)
+    print("----------------------------------------------------------------------")
+    print(search['visitedMap'])
+    print("----------------------------------------------------------------------")
+    print(search['minpq'])
+
 
